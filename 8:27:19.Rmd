@@ -1,0 +1,44 @@
+---
+title: "Notes, Tuesday, August 27: Review of Basic Statistics"
+output: html_notebook
+---
+
+# Tuesday, August 27 
+## Review of Basic Statistics 
+
+```{r}
+load("/Users/isabellelangrock/Desktop/Stats500/Rst500.RData")
+```
+```{r}
+install.packages("ltm")
+library(ltm)
+install.packages("car")
+library(car) 
+```
+
+x(1), x(2), ... x(n)
+
+mean = [x(1) + x(2)+...+x(n)]/n = $\sum_{x = 1}^{n} f(x(i))$/n
+
+
+Basic commands
+mean(variable): 
+sort(variable): lowest-> hightest
+median(variable)
+
+mean & median are measures of location: they will move x distance when +/- x. 
+mean is more likely to be skewed by outliers, most of statistics built on the mean however which can produce issues.
+
+summary(variable): min, max, median, mean, quartiles (also a measure of location) 
+
+low<- variable<=median
+variable[low] : pull out values lower than the median
+variable[!low]: pull out values not (!) than the median 
+
+boxplot(variable): plots a boxplot (information from summary)
+
+sample variance: $s^2$ = $\sum_{x = 1}^{i} f(x(i) -mean)$/n-1 
+
+Introduction to probability. Flip a coin, 1000 times
+
+#
