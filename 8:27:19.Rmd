@@ -1,6 +1,8 @@
 ---
 title: "Notes, Tuesday, August 27: Review of Basic Statistics"
-output: html_notebook
+output: 
+  html_document:
+    keep_me: true
 ---
 
 # Tuesday, August 27 
