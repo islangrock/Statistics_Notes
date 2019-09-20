@@ -1,0 +1,86 @@
+---
+title: "9/5: Simple Libear Regression"
+output: 
+  html_document:
+    keep_md: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+load("/Users/isabellelangrock/Desktop/Stats500/Rst500.RData")
+library(ltm)
+library(car) 
+```
+# Thursday, September 5 
+## Simple Linear Regression - Chapter 2 in Sheather (Simon Sheather)
+### *Living, Breathing, Plotting*
+
+```{r}
+fuel
+par(mfrow=c(1,2))
+boxplot(fuel$Tax)
+plot(fuel$Tax,fuel$Fuel)
+arrowplot(fuel$Tax, fuel$Fuel)
+plot(fuel$Tax, fuel$Fuel)
+abline(fuel$Tax, fuel$Fuel)
+abline(lm(fuel$Fuel~fuel$Tax), col="red")
+lm_sample <- lm(fuel$Fuel~fuel$Tax)
+res<- lm_sample$residual
+res
+fit <- lm_sample$fitted
+fit
+str(lm_sample)
+cbind(fuel, fit, res)
+
+boxplot(res)
+plot(fit, res)
+plot(lm_sample)
+
+fuelsim()
+par(mfrow=c(2,2))
+fuelsim()
+fuelsim()
+fuelsim()
+fuelsim()
+
+s<-fuelsimbeta(1000)
+boxplot(s)
+mean(s)
+sd(s)
+```
+
+$\alpha + \beta X_{1}$ is the fitted value for  $\widehat{x}$
+$y_{i} - \widehat{y_{i}} = y_{i}-(\widehat{\alpha}+\widehat{s}x_{i}) = R_{i}$
+Want $R_{i}$ to be small 
+Want $y_{i} - \widehat{y_{i}}$ to be small 
+Total or mean residual: $\sum R_{i}$
+Least Squares $\sum_{i=1}^n (y_{i} - \widehat{y_{i}})^2 = \sum_{i=1}^n R_i^2$
+
+How do you do it? How do you find $\widehat{\alpha}$ and $\widehat{\beta}$
+
+-  you let the computer do it 
+- you do calculus 
+- formulas ("not that helpful")
+  - 1 X  (pg. 19 in Sheather)
+  - Many Xs -> matrix formulas
+- You do something computationally stable 
+
+Least squares pays a lot of attention to every point, so outliers can have **big** effects.  
+**fitted** values tell us what the linear model predicts and the **residuals** show the error between the expected and the actual values. We would like to see no obvious pattern in the residuals. The plot of fit x res should **NOT** be interesting, otherwise it indicates that you could find a much better model to fit the data. 
+
+
+$y_{i} = \alpha + \beta x_{i} + e_{i}$
+
+$Fuel_{i} =\alpha + \beta TAX_{i} + e_{i}$
+
+$e_{i}$ are independent, identically distributed, Normal with mean 0 and variance $\sigma^2$
+or $e_{i}$ ~ $N(0,\sigma^2)$
+
+What about $\sigma^2$? How do I get an estimate of $\sigma^2$? 
+Not taking deviations around the mean (1 parameter), taking deviations around the line which has 2 parameters. 
+thus, $(y_{1}-\widehat{y_{i}})^2 + (y_{2}-\widehat{y_{i}})^2 + ... + (y_{n}-\widehat{y_{i}})^2]/(n+2)$ 
+
+General version: $(y_{1}-\widehat{y_{i}})^2 + (y_{2}-\widehat{y_{i}})^2 + ... + (y_{n}-\widehat{y_{i}})^2]/(sample size - Number of parameters for model)$ 

@@ -1,0 +1,140 @@
+---
+title: "9_17_Correlation"
+output: 
+  html_document:
+    keep_md: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r}
+load("/Users/isabellelangrock/Desktop/Stats500/Rst500.RData")
+library(ltm)
+library(car) 
+```
+
+
+
+# Tuesday, September 17 
+## Correlation 
+
+```{r}
+attach(fuel)
+cor(Fuel, Tax)
+```
+** Pearson's Correlation** 
+- Oldest form of correlation and most tied to linear regression, not necessarily the most intuitive. If type of correlation is unspecified, it's pearson's correlation. 
+
+Correlation is between -1 and 1. 
+
+
+```{r}
+Fuels<- (Fuel-mean(Fuel))/sd(Fuel)
+Taxs <- (Tax-mean(Tax))/sd(Tax)
+mean(Fuels)
+sd(Fuels)
+
+plot(Tax, Taxs)
+summary (Tax)
+summary (Taxs)
+
+par(mfrow=c(1,2))
+plot(Tax, Fuel)
+plot(Taxs, Fuels)
+lm(Fuel~Tax)
+lm(Fuels~Taxs)
+abline(lm(Fuels~Taxs), lwd=2, col="red")
+
+head(corEG)
+attach(corEG)
+cor.test(Fuel, Tax)
+```
+How big are the values in terms of the mean and standard deviation. 
+
+## What correlation doesn't explain 
+```{r}
+cor(x,y3)
+plot(x,y3)
+abline(lm(y3~x), col="blue", lwd=2)
+```
+
+
+Pearson's Correlation only explains when variables are related by a line. Thus it gives us 0 for the plot of x, y3 above. Even though we know they are perfectly related. 
+
+```{r}
+cor(x, y4)
+plot(x, y4)
+abline(lm(y4~x), col="green", lwd=2)
+
+plot(lm(y4~x))
+
+cor(x,y1)
+cor(x, y2)
+
+y<-rnorm(2001)
+m<-lm(y~x)
+summary(m)
+res <- lm(y~x)$residual
+cor(res,y)
+cor(res, m$fitted)
+```
+
+What correlation does not measure: 
+- whether variables are realted 
+- whether a line is appropriate 
+- "bang for buck"
+- whether model is useful -- coefficients are always right for the mdoel that they are in, so their meaning and implications highly depend on the model. 
+
+
+```{r}
+fuel[1:4,]
+plot(License, Fuel)
+identify(License, Fuel, label=state)
+pairs(cbind(Fuel, Tax, License))
+cor(cbind(Fuel, Tax, License))
+
+library(lattice)
+levelplot(License~Tax*Fuel)
+
+### need to install rgl in order to make this command run. 
+##plot3d(Tax,License,Fuel)
+```
+Plotting in 3d not the most helpful. So what do we do?
+
+```{r}
+fuelstar<- Fuel/(License/100)
+cor(Fuel, fuelstar)
+summary(lm(fuelstar~Tax))
+cor(fuelstar, Tax)
+#cor(fuel,Tax)
+#cor(Fuel,Tax)
+
+
+
+```
+
+$ Y= \beta_{0} +\beta_{1}Tax + \beta_{2}License +\epsilon$
+$\epsilon ~ N(0, \sigma^2)$
+
+pick $\hat\beta_{0}, \hat\beta_{1}, \hat\beta_{2}$ to minimize --> Now just solving three linear equations with three unknowns. 
+
+General form of the linear model $ Y= \beta_{0} + \beta_{1}X_{1} + \beta_{2}X_{2} + ... + \beta_{k}X_{k} + \epsilon$ where $ \epsilon ~ N(0, \sigma^2)$
+
+
+```{r}
+lm(Fuel~Tax + License)
+
+fuel[1:3,]
+m0<-lm(Fuel~1)
+m1<- lm(Fuel~Tax)
+m2 <- lm(Fuel~Tax + License)
+anova(m0, m1)
+anova(m0, m2)
+ 
+m2$resid
+summary(m2)
+```
+**The coefficient of a variable depends upon what other variables are in the model** 
+
+

@@ -1,0 +1,101 @@
+---
+title: "8/29 Basic Probability"
+output: 
+  html_document:
+    keep_md: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+load("/Users/isabellelangrock/Desktop/Stats500/Rst500.RData")
+library(ltm)
+library(car) 
+```
+
+# Thursday, August 29 
+## Basic Probability 
+
+
+**Sample Space:** Set of everything $\Omega$ that might happen 
+
+**Random Vairable:** Rule or function that assignes a number to each element of $\Omega
+
+**Independence:** Independence of 2 random variables X and Y: Pr(X=x and Y=y)=Pr(X=x)Pr(Y=y)
+
+**Variance** Variance or how far is x from the expectation of x: variance= $E[(X-E(X))^2]$
+
+**Standard Deviation:** $\sqrt(variance)$
+
+**Density Function:** f(x) of density function has two properties $f(x) \ge 0$ and total area under f(x)=1
+
+**Central Limit Theorem:** mean of n nice independent random vairable is nearly normal as n approaches $\infty$
+
+
+```{r}
+red<-sample(c("head", "tail"), 10000, replace=TRUE)
+blue <- sample(c("head","tail"), 10000, replace=TRUE)
+red[1:10]
+blue[1:10]
+cbind(red,blue)[1:10,]
+table(red,blue)
+y<-1*(blue=="head")
+table(y, blue)
+x<-1*(red=="tail")
+table(x,y)
+addmargins(table(x,y))
+toss10<- rbinom(10000,10,.5)
+toss10[1:30]
+table(toss10)
+barplot(table(toss10))
+```
+
+
+
+```{r}
+data(Abortion)
+head(Abortion)
+help(Abortion)
+apply(Abortion,2,mean)
+table(Abortion[,1], Abortion[,3])
+
+```
+
+Picking a random number 
+
+```{r}
+sample(0:9,1)
+```
+
+**Density Functions:**
+*Normal density* is not the normal density- it's not particularly normal. Sometimes called the Gaussian distribution. 
+
+X~N(0,1) -> expectation 0, variance 1
+$y= \sigma X +\mu$ ~$N(\mu, \sigma^2)$ -> expectation $\mu$, variance $\sigma^2$
+
+Normal distribution has 2 roles: as a model for Data and in the Central limit theorem 
+
+mean of n independent Y(i) ~ $N(\mu, \sigma^2)$ is $N(\mu, \sigma^2/n)$
+
+
+```{r}
+plotnormal(0,1)
+abline(v=0, col="blue")
+pnorm(1)
+rnorm(100)
+mean(rnorm(100))
+mean(rnorm(1000))
+```
+
+
+*Cauchy Distribution* Y is Cauchy then the mean of n indepentdent Caushy's is Cauchy (???)
+
+```{r}
+plotcauchy(0,1)
+rcauchy(100)
+mean(rcauchy(100))
+mean(rcauchy(10000))
+
+```

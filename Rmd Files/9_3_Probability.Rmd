@@ -1,0 +1,90 @@
+---
+title: "9_3_Probability"
+output: 
+  html_document:
+    keep_md: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+load("/Users/isabellelangrock/Desktop/Stats500/Rst500.RData")
+library(ltm)
+library(car) 
+```
+
+# Tuesday, September 3 
+## Probability 
+
+### confidence interval 
+95% - 95% of the time we use it it will cover $/mu$ and 5% of the time $/mu$ is missed 
+[A,B] for $/mu$
+
+$\bar{x} \pm s$ where s is the standard deviation 
+$\bar{x} \pm (t*s)/\sqrt(n)$
+
+
+t- value from t table with n-1 degrees of freedom (d.f.) 
+
+
+```{r}
+bloodpressure$change
+boxplot(bloodpressure$change)
+sd(bloodpressure$change)
+qt(.975, 10000)
+t.test(17+rnorm(100))$conf.int
+qnorm((1:15)/16)
+#plot(abline(v=qnorm((1:15)/16)))
+plot(qnorm((1:15)/16), sort(bloodpressure$change))
+par(mfrow=c(2,2))
+qqnorm(rnorm(15))
+qqnorm(rnorm(100))
+qqnorm(rnorm(500))
+qqnorm(rnorm(5000))
+par(mfrow=c(2,2))
+qqnorm(rcauchy(100))
+qqnorm(rcauchy(200))
+qqnorm(rcauchy(100))
+qqnorm(rcauchy(300))
+
+```
+
+### hypothesis testing 
+#### an example 
+Given 5 cards in a poker hand, whats the chance of a Royal Straight Flush
+
+```{r}
+possible_hands<-choose(52,5)
+RSF <- 4/possible_hands
+```
+Chance that it will happen twice 
+```{r}
+RSF*RSF 
+```
+Chance that it will happen thrice 
+```{r}
+RSF*RSF*RSF
+```
+
+**The logic of hypothesis testing**: start with a hypothesis that we are not agnostic about. We have a preference. Compute a chance of it being true. 
+
+
+Null Hypothesis: $H_{0}: \mu = \mu_{0}$ 
+Alternative Hypothesis: $H_{A}: \mu \neq 0$
+
+pt command: p-value, from t tables, chance that t is less than 1 standard deviation away from the mean. pt(s,d.f.)
+multiply pt by two because we're doing a two-sided test. 
+
+```{r}
+pt(-8.12, 14)
+pt(-8.12,14)*2
+t.test(bloodpressure$change)
+
+```
+
+
+What if I tested every $\me_{0}$ 
+
+

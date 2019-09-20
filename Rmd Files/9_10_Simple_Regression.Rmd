@@ -1,0 +1,118 @@
+---
+title: "9_10_Simple_Regression"
+output: 
+  html_document:
+    keep_md: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+load("/Users/isabellelangrock/Desktop/Stats500/Rst500.RData")
+library(ltm)
+library(car) 
+```
+
+# Tuesday, September 10
+## Simple Regression (one X)
+### Properties of Least Squares estimates 
+ - unbiased
+ - minimum variance unbiased
+ - not robust 
+ 
+
+
+
+```{r}
+head(fuel)
+attach(fuel)
+arrowplot(Tax,Fuel)
+m<- lm(Fuel~Tax)
+m$residual
+summary(m)
+
+dogdata
+attach(dogdata)
+boxplot(Change)
+qqnorm(Change)
+qqline(Change)
+shapiro.test(Change)
+
+```
+
+```{r}
+par(mfrow=c(2,2))
+fuelsim()
+fuelsim()
+fuelsim()
+fuelsim()
+
+fs <- fuelsimbeta(1000)
+boxplot(fs) 
+abline(h=-50)
+
+mean(fs)
+
+sd(fs)
+
+set.seed(88)
+gm<-fuelsimbeta(1000)
+sd(gm)
+
+summary(m)
+
+```
+
+
+Fitted line- least square fit 
+True Line : $Y_{i}=\alpha +\beta X_{i} + E_{i}$
+ 
+ 
+ Under the **normal model** least squares estimates are unbiased. 
+ -$E(\widehat{\beta})= \beta$
+ -$E(\widehat{\alpha})= \alpha$
+ -$E(\widehat{\sigma}^2)= \sigma^2$
+ 
+ Want the variability of $\widehat{\beta}$ to be small. Thus compute the variation or SD of $\widehat{\beta}$ 
+ 
+ $var(\widehat{\beta})=E[(\widehat{\beta}-E(\beta)^2)]= E((\widehat{\beta}-\beta)^2)$
+ or in words, Variance of estimate = expected value of the squared difference of estimate - parameter
+ 
+ ### **Gauss-Markov Theorem**
+ Among all unbiased estimates of $\beta$, the least squares estimate has the smallest variance. 
+ 
+ $var(\widehat{\beta})=\frac{\sigma^2}{\sum_{i=1}^n(x_{i}-\bar{x})^2}$
+ 
+This forumla tells you it's hard to estimate $\beta$ when there's a lot of variation. But it's good to estimate $\beta$ over a wide range. However you want most of the data points to account for the variabilty in x.You don't want the variability to be coming from just a few outlining data points in x. 
+ 
+If the normal model is true: 
+- $\hat\beta$ is normal 
+- with mean $\beta$ 
+- and variance, $\frac{\sigma^2}{\sum_{i=1}^n(x_{i}-\bar x)^2}$
+
+95% Confidence Interval for $\beta$
+$\hat\beta \pm$ allow for error
+$\hat\beta \pm t_{.025} * \hat{se}(\hat\beta)$
+
+```{r}
+qt(.975,46)
+confint(m)
+-53.11+2.012*15.48
+
+```
+
+### Hypothesis Testing 
+$H_{0}: \beta = \beta_{0}$
+most commonly, $\beta_{0}=0$
+$t=\frac{\hat\beta -\beta_{0}}{\hat{se}(\hat\beta)}$
+
+### Making Predictions: New X', what should I predict? 
+ - Where is $\alpha +\beta X'$
+ - Where is a new observation" $\alpha+ \beta X' + \epsilon$
+```{r}
+plot(Tax,Fuel)
+
+```
+ 

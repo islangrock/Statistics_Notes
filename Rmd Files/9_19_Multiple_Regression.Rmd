@@ -1,0 +1,131 @@
+---
+title: "9_19_Multiple_Regression"
+output: 
+  html_document:
+    keep_md: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r}
+load("/Users/isabellelangrock/Desktop/Stats500/Rst500.RData")
+library(ltm)
+library(car) 
+```
+
+# Thursday, September 19 
+## Multiple Regression 
+### Read Chapter 5 in Sheather 
+
+```{r}
+attach(fuel)
+arrowplot(Tax, Fuel)
+pairs(cbind(Fuel, Tax, License))
+m<- lm(Fuel~Tax+License)
+m
+m0 <- lm(Fuel~1)
+m0
+plot(m0)
+mean(Fuel)
+anova(m0, m)
+cor(Tax, Fuel)^2
+
+m$fit
+cor(Fuel, m$fit)^2
+```
+
+Anova is used to compare two models. Right now (M0) we are comparing a model to a trivial model so it seems like there is an extra step (the setting up of M0). But this will be useful when we start to compare more complex models. 
+
+The sum of squares says that the more variabels we add, the closer the model will get to the dataset. This is both good (better fitting model) and bad (as we want the model to be general enough to fit data outside of the model)
+
+Correlation: $R^2$ what fraction of my variation did my model capture. OR how well do $\hat y$ reproduce y. 
+
+
+** Estimate $\sigma^2$** 
+$ s^2 $ = $\sigma^2$ = $\frac{SSE}{DF}$ = $\frac{\sum(Y-\hat Y)^2}{n- # of parameters}$
+
+```{r}
+m2<- lm(Fuel~Tax+License)
+summary(m2)
+```
+
+Var($\hat\beta_{0}$), perhaps var($\hat\beta_{TAX}$)
+- Previously: $\frac{\sigma^2}{\sum(X-\bar X)^2}$
+- as $s^2$ increases it's harder to attribute $\hat\beta_{TAX}$ 
+- as $\sum(X- \bar X)^2$ increases it's easier to attribute  $\hat\beta_{TAX}$ 
+
+In multiple regression there is a new element: how correlated are the X's. The more correlated the Xs are the harder it is to estimate the coefficients. The more uncorrelated the Xs are the easier it is to estimate the coefficients. 
+
+tax 1 and tax 2 are very highy correlated.Opinions about 1 are highly dependent on opinions about the other. 
+```{r}
+set.seed(88)
+tax1<- Tax + rnorm(48)/10
+tax2<- Tax + rnorm(48)/10
+plot(tax1, tax2)
+summary(lm(Fuel~Tax))
+summary(lm(Fuel~tax1+tax2))
+confidenceEllipse(m2)
+confidenceEllipse(lm(Fuel~tax1+tax2))
+confint(lm(Fuel~tax1+tax2))
+points(0,0,pch=16,col="red")
+
+```
+The confidence ellipse covers the true pair of coefficients 95% of the time. 
+
+Hypothesis Testing 
+** T-test** 
+- Estimated coefficients minus hypothesized value divided by the standard error 
+- $\frac{\hat \beta_{d} -\beta}{\hat{se}(\hat \beta)}$
+
+** F-Test** 
+- $H_{0} : \beta_{TAX} = \beta_{LIC} = 0]$
+- F test is testing whether both coefficients can be 0 in the same equation. 
+
+
+$\beta_{TAX}$
+$\beta_{TAX.LIC}$ <- what we are testing when we run the T-test? Is it possible for the Tac coefficient to be 0 when there is another coefficent in the equation. 
+
+```{r}
+summary(m2)
+anova(m2)
+```
+
+
+What does it mean for the F and T test to agree with each other? 
+F-test it testing if they're all equal to 0
+T-test tests each coefficient one at a time. 
+Logically we expect these two sets to agree with each other. However they ** do not have to**.
+
+F-test tells us someone's doing something, but T-Test tells us we might not know who's doing something. Know something did something (F-Test) but not what something (T-test). Seem to disagree but they are still in accordance because they are making assertions about different things. 
+
+The second way that they can disagree is if they have a lot of variables. Still only one F test, but many t-tests. The tests are not always perfect (error), so it becomes probable there is a mistake the more t-tests we have to run. 
+
+```{r}
+rndt<-rt(200,45)
+rndt 
+boxplot(rndt)
+qt(.975,45)
+abline(h=qt(.975, 45))
+max(abs(rt(200,45)))
+
+boxplot(m2$residuals)
+qqnorm(m2$residuals)
+qqline(m2$residuals)
+shapiro.test(m2$residuals)
+plot(m2)
+
+```
+
+
+Multiple Regression - what's the relationship between my variables? 
+
+
+Building confidence intervals for regression coefficients. 
+- $\hat \beta_{d} \pm t_{.025}$ --> $\hat{se} (\hat \beta_{d})$
+
+```{r}
+confint(m2)
+```
+
+
