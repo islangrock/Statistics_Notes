@@ -1,0 +1,101 @@
+---
+title: "Notes, September 12:Simple Regression "
+output: 
+  html_document:
+    keep_md: true
+---
+
+
+# Thursday, September 12 
+## Simple Regression 
+- Points of Predictions 
+- Checking the Model 
+  - residuals vs. fitted 
+  - normal plot of residuals 
+- Regression ANOVA 
+- Correlation 
+
+## **Useful R Functions**
+- lm()
+- qqnorm()
+- qqline()
+- boxplot()
+- plot()
+
+```{r}
+predict(m,data.frame(Tax=8.5), interval="confidence")
+predict(m, data.frame(Tax=8.5), interval="predict")
+data.frame(state, Tax, Fuel, predict(m, data.frame(Tax=Tax, interval="predict")))
+fit<-m$fitted
+res<-m$residuals
+plot(fit,res)
+lines(lowess(fit,res), col="red")
+qqcompare(res)
+plot(m)
+```
+
+You don't want to see a pattern in the plot of residualsx fit. 
+
+
+Variation in Y = sum of squares of Y (SSY) = $\sum_{i-1}^n(Y_{i}-\bar Y )^2$
+
+** ANOVA identity** 
+
+Variation in Y = Variation in $\hat Y$ + Variation in $Y-\bar Y$ = $\sum(Y_{i}-\bar Y)^2$ = $\sum (\hat Y_{i} - \bar Y)^2 + \sum(Y_{i}- \hat Y_{i})^2$  
+
+$\sum Y_{i}^2$ = $\sum \bar Y^2 +\sum(\hat Y_{i}-\bar Y)^2 + \sum(Y_{i}-\hat Y_{i})^2$
+-> add the degree of freedom for the mean and the residuals. but this is pretty much never done. 
+
+```{r}
+anova(mO,m)
+sum(res^2)
+sum((fit-mean(fit))^2)
+anova(m)
+arrowplot(Tax, Fuel)
+```
+
+Degrees of freedom: 
+   - start with n=48 degrees of freedom 
+     - 1 goes to the mean  (only 47 numbers things to vary; because you can deduce the 48th count from the previous 47)
+     - 1 for $\hat \beta$  (There are two linear restraints on the residuals, the mean=0 and )
+   - 46 left 
+   
+   ANOVA table trying to keep track of these degrees of freedom - how much is free to vary. 
+   
+```{r}
+## Proof of degrees of freedom being 1 for the mean 
+Fuel
+Fuel-mean(Fuel)
+dif<-Fuel-mean(Fuel)
+dif
+sum(dif[1:47])
+mean(dif)
+
+## Proof of degrees of freedom being 1 for the residuals 
+
+mean(res)
+sum(res[1:47])
+res 
+lm(res~Tax)
+sum(res[1:47]*Tax[1:47])/Tax[48]
+```
+
+mean squares: Sum of squares divided by the degrees of freedom. 
+mean squares of residual = $\sigma^2$
+Fairer to compare mean squares than sum of squares 
+
+** F Value** 
+signal to noise ratio. Expect it to be equal to 1 if it's all noise. HIgher F value suggests a stronger, more clear signal. 
+
+P-Value, $H_{0}$:all $\beta$s are zero. 
+
+Now should know what each element of the ANOVA command stands for. 
+
+
+
+```{r}
+anova(m)
+summary(m)
+1-pf(11.764, 1, 46)
+
+```

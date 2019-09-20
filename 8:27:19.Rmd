@@ -18,8 +18,7 @@ library(car)
 
 x(1), x(2), ... x(n)
 
-mean = [x(1) + x(2)+...+x(n)]/n = $\sum_{x = 1}^{n} f(x(i))$/n
-
+mean = [x(1) + x(2)+...+x(n)]/n = $\frac{\sum_{x = 1}^{n} f(x(i))}{n}$
 
 Basic commands
 mean(variable): 
@@ -37,8 +36,4 @@ variable[!low]: pull out values not (!) than the median
 
 boxplot(variable): plots a boxplot (information from summary)
 
-sample variance: $s^2$ = $\sum_{x = 1}^{i} f(x(i) -mean)$/n-1 
-
-Introduction to probability. Flip a coin, 1000 times
-
-#
+sample variance: $s^2$ = $\frac{\sum_{x = 1}^{i} f(x(i) -mean)}{n-1}$
