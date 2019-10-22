@@ -1,0 +1,177 @@
+---
+title: "10_15_Transformations, cont"
+output: 
+  html_document:
+    keep_md: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r}
+load("/Users/isabellelangrock/Desktop/Stats500/Rst500.RData")
+library(ltm)
+library(car) 
+```
+
+# End of Transformations 
+## 
+### Section 5.1 in Sheather 
+
+### Useful transformation packages in R. ** car package** 
+- invTranPlot 
+  - Pink:  0: log transformation (y vs. log(x))
+  - Light Blue: 1: x vs y? - straight line 
+  - Dark Blue -1: y vs. repricol transformation  
+  - black: random value it likes best (best value)
+- invTranEstimate 
+
+```{r}
+head(brains)
+attach(brains)
+```
+
+
+```{r}
+l2brain<-log2(Brain)
+l2body<-log2(Body)
+par(mfrow=c(1,2))
+plot(Body, Brain)
+plot(l2body,l2brain)
+residualPlots(lm(l2brain~l2body))
+
+
+attach(cars)
+plot(size,mpg)
+invTranPlot(size,mpg)
+invTranEstimate(size,mpg)
+
+attach(bigmac)
+head(bigmac)
+plot(Teacher,BigMac)
+BigPerHour<-60/BigMac
+plot(Teacher,BigPerHour)
+invTranPlot(Teacher,BigPerHour)
+invTranEstimate(Teacher,BigPerHour)
+
+
+```
+Back to the brains data 
+```{r}
+plot(l2body, l2brain)
+invTranPlot(l2body, l2brain)
+```
+Box-col can't be applied to negative. So we have to force it to be positive by adding a constant. 
+```{r}
+min(l2body)
+l2bodyP<-l2body+(1-min(l2body))
+
+#proof that it's basicall the same with the constant 
+par(mfrow=c(1,2))
+plot(l2body, l2brain)
+plot(l2bodyP,l2brain)
+
+invTranPlot(l2bodyP,l2brain)
+invTranEstimate(l2bodyP,l2brain)
+```
+
+What are the transformations doing? 
+Making up a curved set of data. 
+Each of the RSS from the invTranPlot for each lambda, matches the anova for each function of the data. 
+$Y=\beta_{0} +\beta_{1}x^2 + \epsilon$ where $\epsilon$ is independently normally distributed. 
+
+```{r}
+set.seed(88)
+x<-1:100
+y<- 100+100/x+rnorm(100)
+plot(x,y)
+invTranPlot(x,y)
+invTranEstimate(x,y)
+
+anova(lm(y~x))
+
+lx<-log(x)
+anova(lm(y~lx))
+
+rx<-1/x 
+anova(lm(y~rx))
+```
+
+# Quick Review of Polynomials 
+
+Quadratic: 
+$y= a + bx + cx^2$ 
+Find the min, max of the arch. 
+
+Cubic: 
+$ y = a + bx + cx^2 + dx^3 $ 
+
+And it will continue: 
+$ y= a + bx + cx^2 + dx^3 + fx^4 $ 
+There's always a polynomial near to a continuous function!! _Someone's approximation theorem_ 
+However we rarely fit higher than cubic models because we don't want a perfect fit, it will capture too much of the noise in the dataset and not enough of the general pattern. 
+
+commands in R
+ - plotpoly(a,b,c)
+
+```{r}
+plotpoly(3,1,2)
+abline(v=-1/4, col="red")
+abline(h=2 +(7/8),col="red")
+
+plotpoly(1, -30, -22, d=1)
+plotpoly(1, -30, -22, d=3)
+
+polyWAT(1)
+polyWAT(2)
+polyWAT(3)
+polyWAT(4)
+polyWAT(5)
+polyWAT(6)
+
+
+attach(polyEG2)
+rm(x,y)
+par(mfrow=c(1,2))
+plot(x,y, pch=16, ylim=c(4,12))
+plot(x,z, pch=16, ylim=c(4,12))
+polyWATz(1)
+polyWATz(2)
+polyWATz(3)
+polyWATz(4)
+polyWATz(17)
+
+par(mfrow=c(1,2))
+plot(x,y, pch=16, ylim=c(4,12))
+polyWATz(17)
+
+
+## Example, fitting a quadratic polynomial to the data set and then taking the regression
+plot(size, mpg)
+x2<- size^2
+m<- lm(mpg~size+x2)
+summary(m)
+plot(size,mpg)
+points(size,m$fit,pch=16, col="red")
+cor(size, x2)
+
+xc2<- (size-mean(size))^2
+plot(size, x2)
+plot(size,xc2)
+cor(size,xc2)
+
+
+
+mc<-lm(mpg~size+xc2)
+plot(size,mpg)
+plot(size,mpg)
+points(size, m$fitted, pch=16, col="red")
+points(size,mc$fitted, pch=16, col="green")
+
+summary(m)
+summary(mc)
+```
+
+
+
+

@@ -1,0 +1,124 @@
+---
+title: "Notes, September 24th, More_Regression"
+output: 
+  html_document:
+    keep_md: true
+---
+
+# Tuesday, September 24th 
+## Mutliple Regression 
+## Read Sheather chapters 6 (Regression by Stages) & 5 (General Linear Hypothesis)
+
+### problem set out Thursday, 9/26. Due Tuesday Oct 15. 
+
+```{r}
+load("/Users/isabellelangrock/Desktop/Stats500/Rst500.RData")
+library(ltm)
+library(car) 
+library(ppcor)
+```
+
+
+```{r}
+vocabulary
+attach(vocabulary)
+summary(lm(Vocab~Age))
+confint(lm(Vocab~Age))
+plot(Age,Vocab, xlim=c(0, 7), ylim=c(-1000,3000))
+abline(lm(Vocab~Age))
+abline(h=0, col="brown")
+agegt15<-pmax(0,Age-1.5)
+agegt15
+summary(lm(Vocab~Age+agegt15))
+confint(lm(Vocab~Age+agegt15))
+
+rbind(Age, agegt15)
+
+plot(Age, Vocab)
+points(Age, lm(Vocab~Age+agegt15)$fitted, pch=16, col="orange")
+
+plot(lm(Vocab~Age))
+detach(vocabulary)
+```
+agegt15 <- how much older than they are than 1.5 years. 
+
+## Regression by Stages 
+
+- Regress Fuel on Licenses, get residuals (fl)
+- Regress Tax on on Licenses get residuals (tl)
+- Regress residuals on residuals (fl on tl)
+ - remove everything that Licenses can uniquely explain about Fuel and Tax. Then see what the residuals can explain. What's unique to Licenses that can't be predicted by Tax. 
+
+
+
+```{r}
+attach(fuel)
+m2<-lm(Fuel~Tax+License)
+m2
+
+fl<- lm(Fuel~License)$residual
+tl<- lm(Tax~License)$residual
+lm(fl~tl)
+
+ft<-lm(Fuel~Tax)$residual
+lt<-lm(License~Tax)$residual
+lm(ft~lt)
+
+plot(tl, fl, xlab="Tax Residuals", ylab="Fuel Residuals")
+abline(lm(fl~tl), col="blue")
+avPlot(m2, Tax)
+
+avPlot(m2,License)
+avPlots(m2)
+addedvarplot(lm(Fuel~License), Tax)
+
+```
+
+### Added Variable plot
+abline(lm(fl~tl), col="blue") OR avPlot(m2, Tax)
+ -> this is the line of the multiple regression (The Tax coefficient of m2)
+ 
+### partial correlation: correlation between two residuals 
+
+```{r}
+cor(tl, fl)
+cor(Tax, Fuel)
+
+pcor(cbind(Fuel, Tax, License))
+
+
+attach(partialcorEG)
+pcor(partialcorEG)
+
+
+m<-lm(Fuel~Tax+License+Inc)
+
+iTL<-lm(Inc~Tax+License)$residual
+fTL<-lm(Fuel~Tax+License)$residual
+lm(fTL~iTL)
+plot(iTL, fTL)
+avPlot(lm(Fuel~Tax+License+Inc), Inc)
+```
+
+### General Linear Hypothesis  -- Chapter 5 in Sheather
+
+$H_{0}:\beta =0$ look at t-test 
+$H_{o}:\beta_{1}=\beta_{2}=0$ look at F-test 
+
+C is a subset of of {1,2,3,...,k}, $H_{0}: \beta_{d}=0$ for j in C
+
+Fit Full model all k variables (Tax, License, Inc)
+Fit Reduced model 
+
+```{r}
+m0<-lm(Fuel~1)
+m0
+m1<-lm(Fuel~Tax)
+anova(m0,m1)
+anova(m0,m)
+```
+
+
+
+
+

@@ -1,0 +1,102 @@
+---
+title: "9_26 Regression_cont"
+output:
+  html_document:
+    keep_md: true
+---
+
+### FOR PROBLEMSET - REDOWNLOAD R WORKSPACE. NEED THE PAINTER DATA SET. 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Thursday, September 26: General Linear Regression 
+### Read Box's use and abuse of Regression
+
+
+```{r}
+load("/Users/isabellelangrock/Desktop/Stats500/Rst500.RData")
+library(ltm)
+library(car) 
+library(ppcor)
+```
+## General Linear Hypothesis 
+```{r}
+attach(fuel)
+mfull<-lm(Fuel~Tax+License+Inc)
+mfull
+
+```
+
+Compare 2 nested models, one model eliminates variables in the other
+full model all k vars
+reduced model, rename varaibles (C) 
+
+### Detailed Version
+```{r}
+mfull
+m0<-lm(Fuel~1)
+mreduced<- lm(Fuel~Tax)
+anova(m0, mfull)
+anova(m0, mreduced)
+anova(mreduced)
+1-pf(31.9,2,44)
+
+```
+## Short version 
+```{r}
+anova(mreduced,mfull)
+```
+
+We've been comparing to the null model (just the constant variable). 
+We hypothesis that some of the coefficients are o, we fit the full model that assumes that's not true, fit the reduced model, look at the sum of squares for error --> has it reduced enough to justify using the variables (it'll always be smaller for the full model but we want to make sure it's small enough)
+
+
+Now, testing the hypothesis $H_{0}: \beta_{tax}=0$
+```{r}
+mreduced2<-lm(Fuel~License+Inc)
+anova(m0, mfull)
+anova(m0,mreduced2)
+anova(mreduced2, mfull)
+summary(mfull)
+```
+
+Is there a sum of squares for a group of variables? no! 
+
+##Review of Logorithms 
+
+$10^3$= 10 x 10 x 10 = 1000 
+$log_{10}(1000)= 3$
+$y=10^a  <-> log_{10}(y)=a$
+$y=b^a <-> log_{b}(y)=a$
+$log_{2}(y) = \frac {log_{10}(y)}{log_{10}(2)}$
+```{r}
+log10(1000)
+10^3
+log2(8)
+2^3
+log10(8)/log10(2)
+log(8)
+```
+
+What base should we use? e= 2.71828...
+
+$y=e^a <=> log_{e}(y)= ln(y) = log(y)= a$
+$\frac {d e^x}{d x} = e^x$
+$ \frac {d ln(y)}{d y} = \frac {1}{y}$
+ln(y) = natural log = $log_{e}$
+
+Never write $e^{ugly}$ always write exp(ugly). 
+
+Properties of log: 
+- log(x) defined for x>0
+- log(xy) = log(x) + log(y)
+- $log(x^a)$= a log(x)
+- x<y <=> log(x) < log(y)
+- exp(x+y) = exp(x)exp(y)
+- exp(log(y))=log(exp(y))=y
+- 
+- 
+
+
+

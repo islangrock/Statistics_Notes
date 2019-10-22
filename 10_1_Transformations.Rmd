@@ -1,0 +1,76 @@
+---
+title: "Notes, October 1, More Regression"
+output: 
+  html_document:
+    keep_md: true
+---
+
+# Tuesday, October 1 
+## Why Transform?  
+## Curves, Boundaries, Model Assumptions, Limit Range 
+
+### New problem set, slight typos on the old one. 
+
+```{r}
+load("/Users/isabellelangrock/Desktop/Stats500/Rst500.RData")
+library(ltm)
+library(car) 
+library(ppcor)
+```
+
+```{r}
+head(cars)
+attach(cars)
+plot(size,mpg)
+m<-lm(mpg~size)
+abline(m)
+plot(m)
+```
+
+##Box-Cox Family of Transformations 
+Structured in terms of how much they do. 
+
+y <-> $y^?$ 
+? <-> $y^?$
+2 <-> $y^2$
+1 <-> y 
+1/2 <-> $y^{1/2} = \sqrt(y)$
+1/3 <-> $y^{1/3}$
+0 <-> log(y)  --> $\frac{y^? -1}{p}$ --> log(y) as p->0
+-1/2 <-> $y^{-1/2}= 1/sqrt(y)$
+-1 <-> $y^{-1} = \frac{1}{y}$
+
+
+```{r}
+log(31) 
+((31^0.001)-1)/.001
+
+plot(size,mpg)
+straightenplot(size,mpg)
+tapply(size,group,median)
+tapply(mpg,group,median)
+straighten(size,mpg)
+straighten(size,mpg,p=2)
+straighten(size,mpg,p=1/2)
+straighten(size,mpg,p=0)
+straighten(size,mpg,p=-1)
+straighten(size,mpg,p=-4)
+straighten(size,mpg,p=-4.5)
+straightenplot(size,mpg,p=-4.5)
+
+straighten(size,mpg, q=0,p=0)
+straightenplot(size,mpg,q=-1.5, p=1)
+straightenplot(size,mpg,q=-1, p=0)
+straightenplot(size,mpg,q=-1/3, p=-1)
+```
+power q of y?
+
+Just straightening (ie only using p) we disrupt the constant variance assumption. 
+
+```{r}
+plot(mpg,100/mpg)
+```
+
+
+
+

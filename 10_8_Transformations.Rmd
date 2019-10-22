@@ -1,0 +1,62 @@
+---
+title: "Notes, October 8, Transformations"
+output: 
+  html_document:
+    keep_md: true
+---
+
+
+# Thursday, October 8: Transformations, Continued
+## Interpretable transformations 
+
+```{r}
+load("/Users/isabellelangrock/Desktop/Stats500/Rst500.RData")
+library(ltm)
+library(car) 
+library(ppcor)
+```
+The Bigmac Dataset: 
+Bigmac: How many minutes the average person must work to earn enough for a BigMac. 
+Teacher: Salary in US Dollars 
+
+```{r}
+bigmac
+attach(bigmac)
+plot(Teacher,BigMac)
+straightenplot(Teacher,BigMac)
+straightenplot(Teacher,BigMac,p=2)
+straighten(Teacher,BigMac, p=2)
+straightenplot(Teacher,BigMac,p=1)
+straighten(Teacher,BigMac,p=1/3)
+straighten(Teacher,BigMac,p=-1)
+straightenplot(Teacher,BigMac,p=-1)
+plot(Teacher,BigMac)
+bigmac[25,]
+plot(Teacher,60/BigMac)
+```
+
+
+```{r}
+brains[1:4,]
+attach(brains)
+plot(Body, Brain)
+abline(lm(Brain~Body))
+plot(log(Body),log(Brain))
+data.frame(Body,Brain, log(Body), log(Brain), Animal)
+data.frame(Body,Brain, log2(Body), log2(Brain), Animal)
+par(mfrow=c(1,2))
+plot(log(Body),log(Brain))
+plot(log2(Body),log2(Brain))
+
+```
+
+```{r}
+head(fuel)
+m<-lm(fuel$Fuel~fuel$Tax + fuel$License)
+tukeyldf(m)
+plot(m$fitted, tukey1df(m))
+summary(lm(fuel$Fuel~fuel$Tax+fuel$License+tukey1df(m)))
+
+#residualPlots(m) -- figure out why this isn't working
+```
+

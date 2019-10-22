@@ -1,0 +1,70 @@
+---
+title: "Notes, October 1, More Regression"
+output: 
+  html_document:
+    keep_md: true
+---
+
+# Thursday, October 3: Transformations 
+
+## Curves, Boundaries, Model Assumptions, Limit Range 
+
+
+```{r}
+load("/Users/isabellelangrock/Desktop/Stats500/Rst500.RData")
+library(ltm)
+library(car) 
+library(ppcor)
+```
+
+```{r}
+attach(cars)
+plot(size,mpg)
+straightenplot(size,mpg)
+straightenplot(size,mpg, p=-4.5)
+straightenplot(size,mpg,p=1,q=-1.5)
+lmpg<-log(mpg)
+rsize<1/size
+m<-lm(lmpg~rsize)
+summary(m)
+plot(rsize,lmpg)
+abline(m,col="blue")
+plot(m)
+plot(size,mpg)
+points(size,exp(2.58+66.59/size),pch=16, col="green")
+carsplot()
+```
+```{r}
+attach(vocabulary)
+vocabulary
+plot(Age,Vocab)
+kink(Age, at=1/5)
+kink
+kink(Age, at=1.5)
+cbind(Age,kink(Age, at=1.5))
+plot(Age,Vocab)
+summary(lm(Vocab~Age+kink(Age, at=1.5)))
+```
+
+```{r}
+summary(lm(mpg~size+kink(size)))
+plot(size,mpg)
+points(size,lm(mpg~size+kink(size))$fitted,pch=16, col="blue")
+#lmkink(size,mpg)
+#(bcPower(size, -1), bcPower(mpg,0))
+```
+##for lmkink need to redownload workspace.
+
+```{r}
+#attach(loglog)
+#plot(x,y)
+#m<-lm(y~x)
+#plot(log(x),log(y))
+```
+
+```{r}
+#head(haystacks)
+#dim(haystacks)
+```
+
+
